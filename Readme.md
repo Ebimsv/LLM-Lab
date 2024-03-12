@@ -306,26 +306,6 @@ final_perplexity = perplexity.compute()
 print(f"Perplexity: {final_perplexity.item()}")
 ```
 
-Let's illustrate these metrics with an example. Suppose we have a language model trained on a large corpus of text, and we want to evaluate its performance using cross-entropy and perplexity. We provide a test set of sentences, and for each sentence, we calculate the cross-entropy and perplexity as follows:
-
-1. **Sentence: "The cat is sitting on the ..."**
-
-   The language model predicts the next word as "mat" with a probability of 0.8, "chair" with a probability of 0.1, and "table" with a probability of 0.1.
-   
-   Cross-entropy = -log(0.8) = 0.223  
-   Perplexity = exp(0.223) = 1.250
-
-2. **Sentence: "I want to go to the ..."**
-
-   The language model predicts the next word as "park" with a probability of 0.6, "store" with a probability of 0.3, and "school" with a probability of 0.1.
-   
-   Cross-entropy = -log(0.6) = 0.511  
-   Perplexity = exp(0.511) = 1.668
-
-By calculating the cross-entropy and perplexity for multiple sentences in the test set and taking their average, we can obtain a quantitative measure of the language model's performance.
-
-In summary, cross-entropy and perplexity are widely used metrics to evaluate the effectiveness of language models. These metrics provide insights into the model's ability to predict the next word accurately, with lower values indicating better performance.
-
 # Step 3: Choose the appropriate method: Language Modeling with Embedding Layer and LSTM
 
 The Language Modeling with Embedding Layer and LSTM code is a powerful tool for building and training language models. This code implementation combines two fundamental components in natural language processing: an **embedding layer** and a **long short-term memory (LSTM)** network.
