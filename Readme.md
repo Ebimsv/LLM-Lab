@@ -277,39 +277,17 @@ Despite these limitations, transformer models have revolutionized the field of n
 </details>
 
 ## Evaluating language model
+Perplexity, in the context of language modeling, is a measure that quantifies how well a language model predicts a given test set, with lower perplexity indicating better predictive performance. In simpler terms, perplexity is calculated by taking the inverse probability of the test set and then normalizing it by the number of words. The lower the perplexity value, the better the language model is at predicting the test set.
 
-Two commonly used metrics for evaluating language models are **cross-entropy** and **perplexity**.
+The formula for perplexity as the inverse probability of the test set, normalized by the number of words, is as follows:
 
-Cross-entropy is a measure of how well the language model predicts the next word in a sequence. It quantifies the difference between the predicted probability distribution and the true distribution of the next word. Lower cross-entropy values indicate better predictions. The formula for cross-entropy is:
+Perplexity = (1 / (P(w_1) * P(w_2) * ... * P(w_N)))^(1/N)
 
-- **Cross-entropy = -Σ log(p(x))**
+where:
+- N is the total number of words or tokens in the test set.
+- P(w_i) is the probability assigned by the language model to the i-th word in the test set.
+- The product is taken over all words or tokens in the test set.
 
-where p(x) is the predicted probability of the true next word x.
-
-Perplexity is derived from cross-entropy and provides an alternative way to measure the performance of a language model. It represents the average uncertainty or surprise of the model when predicting the next word. Perplexity is calculated as the exponentiation of the cross-entropy value. The formula for perplexity is:
-
-- **Perplexity = exp(Cross-entropy)**
-
-‍‍A lower perplexity value indicates that the model is more confident and accurate in predicting the next word.
-
-Here's a simple example of how to use the cross-entropy loss function in `torch.nn`:
-
-```
-import torch
-import torch.nn as nn
-
-# Define some dummy data
-# logits are raw outputs from a model and typically haven't had a softmax applied
-logits = torch.tensor([[0.2, 0.5, 0.3], [0.1, 0.2, 0.7]])
-targets = torch.tensor([1, 2])  # ground truth labels
-
-# Initialize the CrossEntropyLoss
-loss_function = nn.CrossEntropyLoss()
-
-# Calculate the loss
-loss = loss_function(logits, targets)
-print(f"Cross Entropy Loss: {loss.item()}")
-```
 
 Here's a simple example of how to use the Perplexity metric from `torchmetrics`:
 ```
