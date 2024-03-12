@@ -60,7 +60,7 @@ Here are the advantages and disadvantages of N-gram language models:
 
 **Advantages**:
 
-  1. Simplicity: N-gram models are relatively simple to implement and understand. They have a straightforward probabilistic framework that can be easily computed and interpreted.
+  1. Simplicity: They have a straightforward probabilistic framework that can be easily computed and interpreted.
   2. Efficiency: N-gram models are computationally efficient compared to more complex models. They require minimal memory and processing power, making them suitable for resource-constrained environments.
   3. Robustness: N-gram models can handle out-of-vocabulary words and noisy data reasonably well. They can still provide reasonable predictions based on the available n-gram statistics, even if they encounter unseen words.
 
