@@ -286,11 +286,11 @@ Cross-entropy is a measure of how well the language model predicts the next word
 
 where p(x) is the predicted probability of the true next word x.
 
-Perplexity is derived from cross-entropy and provides an alternative way to measure the performance of a language model. It represents the average uncertainty or surprise of the model when predicting the next word. Perplexity is calculated as the exponentiation of the cross-entropy value. Lower perplexity values indicate better language models. The formula for perplexity is:
+Perplexity is derived from cross-entropy and provides an alternative way to measure the performance of a language model. It represents the average uncertainty or surprise of the model when predicting the next word. Perplexity is calculated as the exponentiation of the cross-entropy value. The formula for perplexity is:
 
 - **Perplexity = exp(Cross-entropy)**
 
-A lower perplexity value indicates that the model is more confident and accurate in predicting the next word.
+‍‍A lower perplexity value indicates that the model is more confident and accurate in predicting the next word.
 
 Here's a simple example of how to use the cross-entropy loss function in `torch.nn`:
 
