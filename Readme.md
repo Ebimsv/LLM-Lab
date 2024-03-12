@@ -281,13 +281,8 @@ Perplexity, in the context of language modeling, is a measure that quantifies ho
 
 The formula for perplexity as the inverse probability of the test set, normalized by the number of words, is as follows:
 
-Perplexity = (1 / (P(w_1) * P(w_2) * ... * P(w_N)))^(1/N)
-
-where:
-- N is the total number of words or tokens in the test set.
-- P(w_i) is the probability assigned by the language model to the i-th word in the test set.
-- The product is taken over all words or tokens in the test set.
-
+![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/Perplexity-1.png)
+![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/Perplexity-2.png)
 
 Here's a simple example of how to use the Perplexity metric from `torchmetrics`:
 ```
