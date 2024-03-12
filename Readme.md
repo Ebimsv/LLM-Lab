@@ -277,34 +277,21 @@ Despite these limitations, transformer models have revolutionized the field of n
 </details>
 
 ## Evaluating language model
-Perplexity, in the context of language modeling, is a measure that quantifies how well a language model predicts a given test set, with lower perplexity indicating better predictive performance. In simpler terms, perplexity is calculated by taking the inverse probability of the test set and then normalizing it by the number of words. The lower the perplexity value, the better the language model is at predicting the test set.
+Perplexity, in the context of language modeling, is a measure that quantifies how well a language model predicts a given test set, with lower perplexity indicating better predictive performance. In simpler terms, perplexity is calculated by taking the inverse probability of the test set and then normalizing it by the number of words. 
+
+The lower the perplexity value, the better the language model is at predicting the test set.
+**Minimizing perplexity is the same as maximizing probability**
 
 The formula for perplexity as the inverse probability of the test set, normalized by the number of words, is as follows:
 
 ![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/Perplexity-1.png)
 ![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/Perplexity-2.png)
 
-Here's a simple example of how to use the Perplexity metric from `torchmetrics`:
-```
-import torch
-import torchmetrics
+### Interpreting perplexity as a branching factor
+Perplexity can be interpreted as a measure of the branching factor in a language model. 
+The branching factor represents the average number of possible next words or tokens given a particular context or sequence of words.
 
-# Define some dummy data
-logits = torch.tensor([[0.2, 0.5, 0.3], [0.1, 0.2, 0.7]])
-targets = torch.tensor([1, 2])
-
-# Calculate the loss using CrossEntropyLoss since it's often used with perplexity
-loss_function = torch.nn.CrossEntropyLoss(reduction='none')
-losses = loss_function(logits, targets)
-
-# Initialize the Perplexity metric
-perplexity = torchmetrics.Perplexity()
-
-# Update the state with losses and compute the perplexity
-perplexity.update(losses)
-final_perplexity = perplexity.compute()
-print(f"Perplexity: {final_perplexity.item()}")
-```
+The Branching factor of a language is the number of possible next words that can follow any word. We can think of perplexity as the weighted average branching factor of a language.
 
 # Step 3: Choose the appropriate method: Language Modeling with Embedding Layer and LSTM
 
