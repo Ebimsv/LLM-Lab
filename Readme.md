@@ -49,10 +49,10 @@ N-gram language models are a traditional approach to language modeling that rely
 In an N-gram model, the probability of a word is estimated based on its occurrence in the training data relative to its preceding N-1 words. For example, in a trigram model (N=3), the probability of a word is determined by the two words that immediately precede it. This approach assumes that the probability of a word depends only on a fixed number of preceding words and does not consider long-range dependencies.
 
 Here are some examples of n-grams: 
-- Unigram: "This", "article", "is", "on", "NLP"
-- Bigram: "This article", "article is", "is on", "on NLP"
-- Trigram: "Please turn your", "turn your homework"
-- 4-gram: "What is N-gram method"  
+- **Unigram**: "This", "article", "is", "on", "NLP"
+- **Bigram**: "This article", "article is", "is on", "on NLP"
+- **Trigram**: "Please turn your", "turn your homework"
+- **4-gram**: "What is N-gram method"  
 
 ![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/N-gram.png)
 
@@ -89,7 +89,10 @@ print(list(ngrams_iterator(tokens, 3)))
 
 ['i', 'love', 'to', 'code', 'in', 'python', 'i love', 'love to', 'to code', 'code in', 'in python', 'i love to', 'love to code', 'to code in', 'code in python']
 ```
-
+**Note**:
+- The n-gram model, typically using trigram, 4-gram, or 5-gram 
+- N-gram model inadequate for language modeling due to the presence of long-range dependencies in language.
+- 
 </details>
 
 <details>
