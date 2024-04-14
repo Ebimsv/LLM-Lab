@@ -32,7 +32,7 @@ Thus, specially designed smoothing strategies such as back-off estimation and Go
 <details>
   <summary><b>2. Neural language models (NLM)</b></summary><br/>
    
-Neural language models (NLM). NLMs characterize the probability of word sequences by neural networks, e.g., multi-layer perceptron (MLP) and recurrent neural networks (RNNs).
+NLMs characterize the probability of word sequences by neural networks, e.g., multi-layer perceptron (MLP) and recurrent neural networks (RNNs).
 As a remarkable contribution, is the concept of **distributed representation**. Distributed representations, also known as **embeddings**, the idea is that the "meaning" or "semantic content" of a data point is distributed across multiple dimensions. For example, in NLP, words with similar meanings are mapped to points in the vector space that are close to each other. This closeness is not arbitrary but is learned from the context in which words appear. This context-dependent learning is often achieved through neural network models, such as **Word2Vec** or **GloVe**, which process large corpora of text to learn these representations.
 
 One of the key advantages of distributed representations is their ability to capture fine-grained semantic relationships. For instance, in a well-trained word embedding space, synonyms would be represented by vectors that are close together, and it's even possible to perform arithmetic operations with these vectors that correspond to meaningful semantic operations (e.g., "king" - "man" + "woman" might result in a vector close to "queen").
@@ -87,7 +87,8 @@ For more information, please refer to the [A Guide to Language Model Training Ap
 
 ## Different Types of Models for Language Modeling  
 
-Language modeling involves building models that can generate or predict sequences of words or characters. Here are some different types of models commonly used for language modeling:
+Language modeling involves building models that can generate or predict sequences of words or characters. 
+Here are some different types of models commonly used for language modeling:  
 
 <details>
   <summary><b>1. N-gram Language Models</b></summary><br/>
