@@ -4,24 +4,49 @@
 This project is a step-by-step guide on building a language model using PyTorch. It aims to provide a comprehensive understanding of the process involved in developing a language model and its applications.
 
 # Step 1: Accurate and concise definition of the problem
-Language modelling involves developing models that can effectively understand and generate human-like text based on input data, enabling tasks such as machine translation, text generation, and sentiment analysis.
-There are several common types of language modeling techniques, including:
+Language modeling, or LM, is the use of various statistical and probabilistic techniques to determine the probability of a given sequence of words occurring in a sentence. 
+Language models analyze bodies of text data to provide a basis for their word predictions.
 
-- **N-gram Language Models**: These models predict the next word based on the context of the previous N-1 words. 
-They are relatively simple but suffer from data sparsity issues.
+Language modeling is used in artificial intelligence (AI), natural language processing (NLP), natural language understanding (NLU), and natural language generation(NLG) systems, particularly ones that perform text generation, machine translation and question answering.
 
-- **Neural Language Models**: These models leverage neural networks, such as recurrent neural networks (RNNs) or transformer models, to capture complex dependencies and contextual information in the text, resulting in improved performance.
+![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/nlp_nlu_nlg.png)
+
+Large language models (LLMs) also use language modeling. These are advanced language models, such as OpenAI's GPT-3 and Google's Palm 2, that handle billions of training data parameters and generate text output.
 
 The effectiveness of a language model is typically evaluated using metrics like **cross-entropy** and **perplexity**, which measure the model's ability to predict the next word accurately (I will cover them in **Step 2**). Several datasets, such as WikiText-2, WikiText-103, One Billion Word, Text8, and C4, among others, are commonly used for evaluating language models.
-**Note**: In this project, I use WikiText-2 
+**Note**: In this project, I use WikiText-2.
 
-## The goal of solving a problem or challenge
-The goal of solving a problem or challenge in language modelling with AI is to develop models that can effectively understand, generate, and manipulate human language, enabling various applications such as natural language processing, machine translation, text summarization, sentiment analysis, and more. The aim is to enhance communication and interaction between humans and machines, enabling more efficient and intelligent language-based tasks.
+# Step 2: Advancements and types of Language Models:  
 
-# Step 2: Advancements in Language Modelling and different approaches: 
+## Different types of language models:
+The research of LM has received extensive attention in the literature, which can be divided into four major development stages:
 
-## Different Language model training approaches:
-Language model training approaches can be broadly categorized into three main types: **causal language models**, **masked language models**, and **sequence-to-sequence models**. Each approach has its own characteristics and training methodologies. Let's explore each of them in more detail:
+1. **Statistical language models (SLM)**:  
+SLMs are de- veloped based on statistical learning methods that rose in the 1990s. The basic idea is to build the word prediction model based on the **Markov assumption**, e.g., predicting the next word based on the most recent context. The SLMs with a fixed context length **n** are also called **n-gram language models**, e.g., bigram and trigram language models. SLMs have been widely applied to enhance task performance in information retrieval (IR) and natural language processing (NLP). However, they often suffer from the curse of dimensionality:  
+it is difficult to accurately estimate high-order language models since an exponential number of transition probabilities need to be estimated.
+Thus, specially designed smoothing strategies such as back-off estimation and Good–Turing estimation have been introduced to alleviate the data sparsity problem.
+
+2. **Masked Language Models (e.g., BERT)**:  
+Neural language models (NLM). NLMs characterize the probability of word sequences by neural networks, e.g., multi-layer perceptron (MLP) and recurrent neural networks (RNNs).
+As a remarkable contribution, is the concept of **distributed representation**.  
+
+**The Basics of Distributed Representations**:    
+In distributed representations, also known as **embeddings**, the idea is that the "meaning" or "semantic content" of a data point is distributed across multiple dimensions. For example, in NLP, words with similar meanings are mapped to points in the vector space that are close to each other. This closeness is not arbitrary but is learned from the context in which words appear. This context-dependent learning is often achieved through neural network models, such as **Word2Vec** or **GloVe**, which process large corpora of text to learn these representations.
+
+One of the key advantages of distributed representations is their ability to capture fine-grained semantic relationships. For instance, in a well-trained word embedding space, synonyms would be represented by vectors that are close together, and it's even possible to perform arithmetic operations with these vectors that correspond to meaningful semantic operations (e.g., "king" - "man" + "woman" might result in a vector close to "queen").
+
+**Applications of Distributed Representations:**  
+Distributed representations have a wide range of applications, particularly in tasks that involve natural language understanding. They are used for:
+
+**Word Similarity**: Measuring the semantic similarity between words.  
+**Text Classification**: Categorizing documents into predefined classes.  
+**Machine Translation**: Translating text from one language to another.  
+**Information Retrieval**: Finding relevant documents in response to a query.  
+**Sentiment Analysis**: Determining the sentiment expressed in a piece of text.  
+
+Moreover, distributed representations are not limited to text data. They can also be applied to other types of data, such as images, where deep learning models learn to represent images as high-dimensional vectors that capture visual features and semantics.  
+
+## Different training approaches of Language model:
 
 1. **Causal Language Models (e.g., GPT-3)**:
    Causal language models, also known as **autoregressive models**, generate text by predicting the next word in a sequence given the previous words. These models are trained to maximize the likelihood of the next word using techniques like the transformer architecture. During training, the input to the model is the entire sequence up to a given token, and the model's goal is to predict the next token. This type of model is useful for tasks such as **text generation**, **completion**, and **summarization**.
@@ -49,10 +74,10 @@ N-gram language models are a traditional approach to language modeling that rely
 In an N-gram model, the probability of a word is estimated based on its occurrence in the training data relative to its preceding N-1 words. For example, in a trigram model (N=3), the probability of a word is determined by the two words that immediately precede it. This approach assumes that the probability of a word depends only on a fixed number of preceding words and does not consider long-range dependencies.
 
 Here are some examples of n-grams: 
-- **Unigram**: "This", "article", "is", "on", "NLP"
-- **Bigram**: "This article", "article is", "is on", "on NLP"
-- **Trigram**: "Please turn your", "turn your homework"
-- **4-gram**: "What is N-gram method"  
+- **Unigram**: "This", "article", "is", "on", "NLP"  
+- **Bigram**: "This article", "article is", "is on", "on NLP"  
+- **Trigram**: "Please turn your", "turn your homework"  
+- **4-gram**: "What is N-gram method"    
 
 ![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/N-gram.png)
 
@@ -89,10 +114,10 @@ print(list(ngrams_iterator(tokens, 3)))
 
 ['i', 'love', 'to', 'code', 'in', 'python', 'i love', 'love to', 'to code', 'code in', 'in python', 'i love to', 'love to code', 'to code in', 'code in python']
 ```
+
 **Note**:
 - The n-gram model, typically using trigram, 4-gram, or 5-gram 
 - N-gram model inadequate for language modeling due to the presence of long-range dependencies in language.
-- 
 </details>
 
 <details>
@@ -400,272 +425,3 @@ Save the vocabulary to a file:
 torch.save(vocab, 'wikitext2_vocab.pt')
 ```
 </details>
-
-<details>
-<summary><b>EDA(Exploratory data analysis)</b></summary><br/>
-These histograms can provide insights into the dataset's composition and help identify any imbalances or patterns. 
-
-   - Histogram for Age:  
-      ![alt text](https://github.com/Ebimsv/Facial_Age_estimation_PyTorch/blob/main/pics/age_histogram.png)  
-
-
-   - Histogram for Gender:  
-      ![alt text](https://github.com/Ebimsv/Facial_Age_estimation_PyTorch/blob/main/pics/gender_histogram.png)  
-
-
-   - Histogram for Ethnicity:  
-      ![alt text](https://github.com/Ebimsv/Facial_Age_estimation_PyTorch/blob/main/pics/ethnicity_histogram.png)
-
-</details>
-
-<details>
-<summary><b>Calculate Cross-Tabulation of Gender and Ethnicity</b></summary><br/>
-Calculating the cross-tabulation of gender and ethnicity using the `pandas.crosstab()` function. This analysis can reveal the relationship between gender and ethnicity within the dataset and provide useful insights.  
-
-   ![alt text](https://github.com/Ebimsv/Facial_Age_estimation_PyTorch/blob/main/pics/cross-tabulation.png)
-
-</details>
-
-<details>
-<summary><b>Create Violin Plots and Box Plots for Age (Separated by Gender)</b></summary><br/>
-These plots can help identify any differences or patterns in the age distribution between men and women in the UTK dataset.  
-
-![alt text](https://github.com/Ebimsv/Facial_Age_estimation_PyTorch/blob/main/pics/violin_plot_age_men_women.png)
-
-</details>
-
-<details>
-<summary><b>Create Violin Plots and Box Plots for Age (Separated by Ethnicity)</b></summary><br/>
-These plots can help identify any differences or patterns in the age distribution among different ethnicities in the UTK dataset.  
-
-![alt text](https://github.com/Ebimsv/Facial_Age_estimation_PyTorch/blob/main/pics/violin_plot_Separated_by_Ethnicity.png)
-
-</details>
-
-### 2. Dataset Splitting
-
-This repository contains code for splitting datasets and analyzing the distributions of age in the training, validation, and test sets. Additionally, it provides instructions for saving these sets in separate CSV files.
-
-#### Contents
-
-1. [Plot Histograms for Age in the Training, Validation, and Test Sets](#plot-histograms-for-age-in-the-training-validation-and-test-sets)
-2. [Save the Training, Validation, and Test Sets in Separate CSV Files](#save-the-training-validation-and-test-sets-in-separate-csv-files)
-
-<details>
-  <summary><b>Plot Histograms for Age in the Training, Validation, and Test Sets</b></summary><br/>
-This histograms will help ensure that the distributions of age in these sets are similar, indicating a balanced and representative dataset split.  
-
-![alt text](https://github.com/Ebimsv/Facial_Age_estimation_PyTorch/blob/main/pics/histogram_train_valid_test.png)
-
-</details>
-
-<details>
-  <summary><b>Save the Training, Validation, and Test Sets in Separate CSV Files</b></summary><br/>
-This step is crucial for further analysis or modeling tasks, as it allows you to access and manipulate each set individually.
-</details>
-
-### 3. Transformations
-
-The defined transformations include resizing images, applying random flips and rotations, adjusting image color, converting images to tensors, and normalizing pixel values.
-
-#### Contents
-
-1. [Resizing Images](#resizing-images)
-2. [Applying Random Horizontal Flips](#applying-random-horizontal-flips)
-3. [Introducing Random Rotations](#introducing-random-rotations)
-4. [Adjusting Image Color using ColorJitter](#adjusting-image-color-using-colorjitter)
-5. [Converting Images to Tensors](#converting-images-to-tensors)
-6. [Normalizing Pixel Values](#normalizing-pixel-values)
-
-
-<details>
-  <summary><b>Resizing Images</b></summary><br/>
-Resizing images to a resolution of 128x128 pixels. Resizing the images ensures consistent dimensions and prepares them for further processing or analysis.
-</details>
-
-<details>
-  <summary><b>Applying Random Horizontal Flips</b></summary><br/>
-Random flips can introduce diversity and prevent model bias towards specific orientations.
-</details>
-
-<details>
-  <summary><b>Random Rotations</b></summary><br/>
-Random rotations can simulate variation and improve model robustness to different orientations.
-</details>
-
-<details>
-  <summary><b>Adjusting Image Color using ColorJitter</b></summary><br/>
-ColorJitter allows you to modify the brightness, contrast, saturation, and hue of the images, enhancing their visual appearance and potentially improving model performance.
-</details>
-
-<details>
-  <summary><b>Converting Images to Tensors</b></summary><br/>
-Converting images to tensors is a required step for many deep learning frameworks and enables efficient computation on GPUs.
-</details>
-
-<details>
-  <summary><b>Normalizing Pixel Values</b></summary><br/>
-Normalizing the pixel values ensures that they have a standard range and distribution, making the training process more stable. The provided mean and standard deviation values (mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) can be used for this normalization.
-</details>
-
-### 4. Custom Dataset and DataLoader
-
-The custom dataset allows you to load and preprocess your own data, while the dataloader provides an efficient way to iterate over the dataset during training or evaluation.
-
-#### Contents
-
-1. [Custom Dataset](#custom-dataset)
-2. [Define DataLoader](#define-dataloader)
-
-<details>
-  <summary><b>Custom Dataset</b></summary><br/>
-The custom dataset is designed to handle your specific data format and apply any necessary preprocessing steps. You can modify the dataset class according to your data structure, file paths, and preprocessing requirements.
-</details>
-
-<details>
-  <summary><b>DataLoader</b></summary><br/>
-The dataloader is responsible for efficiently loading and batching the data from the custom dataset. It provides an iterator interface that allows you to easily access the data during model training or evaluation. You can customize the dataloader settings such as batch size, shuffling, and parallel data loading based on your specific needs.
-</details>
-
-## 5. Model with Custom Dataset
-
-The models used in this project are ResNet50 and EfficientNet B0, and they are trained on the custom dataset you provide.
-
-### Contents
-
-1. [ResNet50 Model](#resnet50-model)
-2. [EfficientNet B0 Model](#efficientnet-b0-model)
-
-<details>
-  <summary><b>ResNet50 Model</b></summary><br/>
-The ResNet50 architecture is a widely-used convolutional neural network that has shown impressive performance on various computer vision tasks. You will learn how to load the pre-trained ResNet50 model, fine-tune it on your custom dataset, and use it for inference.  
-
-   ![alt text](https://github.com/Ebimsv/Facial_Age_estimation_PyTorch/blob/main/pics/Resnet50.png)
-</details>
-
-<details>
-  <summary><b>EfficientNet B0 Model</b></summary><br/>
-EfficientNet is a family of convolutional neural networks that have achieved state-of-the-art performance on image classification tasks while being computationally efficient. You will learn how to load the pre-trained EfficientNet B0 model, adapt it to your custom dataset, and leverage its capabilities for classification or feature extraction.  
-
-   ![alt text](https://github.com/Ebimsv/Facial_Age_estimation_PyTorch/blob/main/pics/EfficientNet.png)
-</details>
-
-## 6. Training Process
-
-This repository contains code for the training process of a model, including finding hyperparameters, the training and evaluation loop, and plotting learning curves.
-
-### Contents
-
-1. [Finding Hyperparameters](#finding-hyperparameters)
-   1. [Step 1: Calculate the Loss for an Untrained Model](#step-1-calculate-the-loss-for-an-untrained-model-using-a-few-batches)
-   2. [Step 2: Train and Overfit the Model on a Small Subset of the Dataset](#step-2-try-to-train-and-overfit-the-model-on-a-small-subset-of-the-dataset)
-   3. [Step 3: Train the Model for a Limited Number of Epochs](#step-3-train-the-model-for-a-limited-number-of-epochs-experimenting-with-various-learning-rates)
-   4. [Step 4: Create a Small Grid Using Weight Decay and the Best Learning Rate and save it to a CSV file](#step-4-create-a-small-grid-using-the-weight-decay-and-the-best-learning-rate-and-save-it-to-a-CSV-file)
-   5. [Step 5: Train the Model for Longer Epochs Using the Best Model from Step 4](#step-5-train-model-for-longer-epochs-using-the-best-model-from-step-4)
-2. [Training and Evaluation Loop](#train-and-evaluation-loop)
-3. [Plotting Learning Curves with Matplotlib and TensorBoard](#plot-learning-curves)
-4. [Save the best model from .pt to .jit](#Save-the-best-model-from-.pt-to-.jit)
-
-#### Finding Hyperparameters
-
-The process involves several steps, including calculating the loss for an untrained model, overfitting the model on a small subset of the dataset, training the model for a limited number of epochs with various learning rates, creating a small grid using weight decay and the best learning rate, and finally training the model for longer epochs using the best model from the previous step.
-
-<details>
-  <summary><b>Step 1: Calculate the Loss for an Untrained Model Using one Batch</b></summary><br/>
-This step helps us to understand that the forward pass of the model is working. The forward pass of a neural network model refers to the process of propagating input data through the model's layers to obtain predictions or output values.
-</details>
-
-<details>
-  <summary><b>Step 2: Train and Overfit the Model on a Small Subset of the Dataset</b></summary><br/>
-The goal of Step 2 is to train the model on a small subset of the dataset to assess its ability to learn and memorize the training data.
-</details>
-
-<details>
-  <summary><b>Step 3: Train the Model for a Limited Number of Epochs, Experimenting with Various Learning Rates</b></summary><br/>
-This step helps us to identify the learning rate that leads to optimal training progress and convergence.
-</details>
-
-<details>
-  <summary><b>Step 4: Create a Small Grid Using Weight Decay and the Best Learning Rate and save it to a CSV file</b></summary><br/>
-The goal of Step 4 is to create a small grid using weight decay and the best learning rate, and save it to a CSV file. This grid allows us to examine how weight decay regularization impacts the performance of the model.
-</details>
-
-<details>
-  <summary><b>Step 5: Train the Model for Longer Epochs Using the Best Model from Step 4</b></summary><br/>
-The goal of Step 5 is to train the model for longer epochs using the best model obtained from Step 4. This step aims to maximize the model's learning potential and achieve improved performance by allowing it to learn from the data for an extended period.
-</details>
-
-<details>
-  <summary><b>Step 6: Save the best model from .pt to .jit</b></summary><br/>
-The goal of this step is to convert the best model from .pt to .jit format. This conversion is primarily done to optimize and enhance the model's performance during deployment.
-</details>
-
-#### Train and Evaluation Loop
-
-The train loop handles the training process, including forward and backward passes, updating model parameters, and monitoring training metrics. The evaluation loop performs model evaluation on a separate validation or test dataset and computes relevant evaluation metrics.
-
-<details>
-  <summary><b>Plotting Learning Curves with Matplotlib and TensorBoard</b></summary><br/>
-Learning curves visualize the model's training and validation performance over epochs, providing insights into the model's learning progress, convergence, and potential issues such as overfitting or underfitting.\
-TensorBoard is a tool for providing the measurements and visualizations needed during the machine learning workflow. It enables tracking experiment metrics like loss and accuracy, visualizing the model graph, projecting embeddings to a lower dimensional space, and much more.  
-
-![alt text](https://github.com/Ebimsv/Facial_Age_estimation_PyTorch/blob/main/pics/loss-tensorboard.png)  
-</details>
-
-## Todo
-
-...
-
-### Contents
-
-1. [Inference](#inference)
-2. [Experiments](#experiments)
-   1. [Train and Evaluate the Model Using Various Datasets](#train-and-evaluate-the-model-using-various-datasets)
-   2. [Train the Model Using One Dataset and Test it on a Different One](#train-the-model-using-one-dataset-and-then-test-it-on-a-different-one)
-   3. [Analyze the Loss Value with Respect to Age, Gender, and Race](#analyze-the-loss-value-with-respect-to-age-gender-and-race)
-   4. [Analyze the Model's Sensitivity](#analyze-the-models-sensitivity)
-   5. [Create a Heatmap for the Face Images](#create-a-heatmap-for-the-face-images)
-3. [Use the Model to Perform Age Estimation on a Webcam Image](#use-the-model-to-perform-age-estimation-on-a-webcam-image)
-
-#### Inference
-
-- [ ] Implement code for performing inference using the trained model.
-- [ ] Provide instructions on how to use the inference code with sample input data.
-
-#### Experiments
-
-##### Train and Evaluate the Model Using Various Datasets
-
-- [ ] Conduct experiments to train and evaluate the model using different datasets.
-- [ ] Document the datasets used, training process, and evaluation results.
-- [ ] Provide guidelines on how to adapt the code for using custom datasets.
-
-##### Train the Model Using One Dataset and Test it on a Different One
-
-- [ ] Perform experiments to train the model on one dataset and evaluate its performance on a different dataset.
-- [ ] Describe the process of training and testing on different datasets.
-- [ ] Report the evaluation metrics and discuss the results.
-
-##### Analyze the Loss Value with Respect to Age, Gender, and Race
-
-- [ ] Analyze the loss value of the model with respect to age, gender, and race.
-- [ ] Provide code or scripts to calculate and visualize the loss values for different demographic groups.
-- [ ] Discuss the insights and implications of the analysis.
-
-##### Analyze the Model's Sensitivity
-
-- [ ] Conduct sensitivity analysis to understand the model's response to variations in input data.
-- [ ] Outline the methodology and metrics used for sensitivity analysis.
-- [ ] Present the findings and interpretations of the sensitivity analysis.
-
-##### Create a Heatmap for the Face Images
-
-- [ ] Develop code to generate heatmaps for face images based on the model's predictions or activations.
-- [ ] Explain the process of creating heatmaps and their significance in understanding the model's behavior.
-- [ ] Provide examples and visualizations of the generated heatmaps.
-
-##### Use the Model to Perform Age Estimation on a Webcam Image
-
-- [ ] Integrate the model with webcam functionality to perform age estimation on real-time images.
-- [ ] Detail the steps and code required to use the model for age estimation on webcam images.
-- [ ] Include any necessary dependencies or setup instructions.
