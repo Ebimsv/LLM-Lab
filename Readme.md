@@ -69,9 +69,19 @@ Causal language models, also known as **autoregressive models**, generate text b
 Sequence-to-sequence (Seq2Seq) models are trained to map an input sequence to an output sequence. They consist of **an encoder** that processes the input sequence and **a decoder** that generates the output sequence. Seq2Seq models are widely used in tasks such as **machine translation**, **text summarization**, and **dialogue systems**. They can be trained using techniques like recurrent neural networks (RNNs) or transformers. The training objective is to maximize the likelihood of generating the correct output sequence given the input.
 </details>
 
+<details>
+  <summary><b>What's the difference between Causal Language Modeling and Masked Language Modeling?</b></summary><br/>
+ 
+- Given a sequence of tokens, Causal Language Modeling is the task of generating the next token. It differs from Masked Language Modeling, where certain words in a sentence are masked, and the model is trained to predict them.   
+- In Causal Language Modeling, the model only considers words to the left, while Masked Language Modeling considers words to the left and right.  
+- Therefore, Causal Language Modeling is unidirectional, while Masked Language Modeling is bidirectional.   
+- GPT is an example of a pre-trained Causal Language Model, while BERT is an example of a Masked Language Model.
+  
+</details>
+
 It's important to note that these training approaches are **not mutually exclusive**, and researchers often combine them or employ variations to achieve specific goals. For example, models like T5 combine the autoregressive and masked language model training objectives to learn a diverse range of tasks.
 
-Each training approach has its own strengths and weaknesses, and the choice of the model depends on the specific task requirements and available training data. Researchers and practitioners often experiment with different architectures and training methodologies to improve the performance of language models and adapt them to various natural language processing tasks.  
+Each training approach has its own strengths and weaknesses, and the choice of the model depends on the specific task requirements and available training data. 
 
 For more information, please refer to the [A Guide to Language Model Training Approaches](https://medium.com/@tom_21755/understanding-causal-llms-masked-llm-s-and-seq2seq-a-guide-to-language-model-training-d4457bbd07fa#:~:text=CLM%20models%20focus%20on%20predicting,good%20for%20tasks%20requiring%20the) chapter in the "medium.com" website.
 
@@ -181,7 +191,7 @@ print(hn.shape)  # torch.Size([2, 3, 20])
 </details>
 
 <details>
-  <summary><b>3. Long Short-Term Memory (LSTM):</b></summary><br/>
+  <summary><b>3. Long Short-Term Memory (LSTM)</b></summary><br/>
 LSTM is an extension of the RNN architecture that addresses the vanishing gradient problem. It introduces memory cells and gating mechanisms to selectively retain or forget information over time. LSTMs have proven effective in capturing long-term dependencies and maintaining contextual information.  
 
 **Advantages of LSTMs**:
@@ -232,7 +242,7 @@ For more information, please refer to the [Long Short-Term Memory (LSTM)](https:
 </details>
 
 <details>
-  <summary><b>4. Gated Recurrent Unit (GRU):</b></summary><br/>
+  <summary><b>4. Gated Recurrent Unit (GRU)</b></summary><br/>
 GRU is another variation of the RNN architecture that aims to simplify the LSTM model. It combines the forget and input gates of the LSTM into a single update gate and merges the cell state and hidden state. GRUs have similar capabilities to LSTMs but with fewer parameters, making them computationally more efficient.  
 
 **Advantages of GRUs**:
