@@ -21,17 +21,19 @@ The effectiveness of a language model is typically evaluated using metrics like 
 ## Different types of language models:
 The research of LM has received extensive attention in the literature, which can be divided into four major development stages:
 
-1. **Statistical language models (SLM)**:  
-SLMs are de- veloped based on statistical learning methods that rose in the 1990s. The basic idea is to build the word prediction model based on the **Markov assumption**, e.g., predicting the next word based on the most recent context. The SLMs with a fixed context length **n** are also called **n-gram language models**, e.g., bigram and trigram language models. SLMs have been widely applied to enhance task performance in information retrieval (IR) and natural language processing (NLP). However, they often suffer from the curse of dimensionality:  
+<details>
+  <summary><b>1. Statistical language models (SLM)</b></summary><br/>
+   
+SLMs are developed based on statistical learning methods that rose in the 1990s. The basic idea is to build the word prediction model based on the **Markov assumption**, e.g., predicting the next word based on the most recent context. The SLMs with a fixed context length **n** are also called **n-gram language models**, e.g., bigram and trigram language models. SLMs have been widely applied to enhance task performance in information retrieval (IR) and natural language processing (NLP). However, they often suffer from the curse of dimensionality:  
 it is difficult to accurately estimate high-order language models since an exponential number of transition probabilities need to be estimated.
 Thus, specially designed smoothing strategies such as back-off estimation and Good–Turing estimation have been introduced to alleviate the data sparsity problem.
+</details>
 
-2. **Masked Language Models (e.g., BERT)**:  
+<details>
+  <summary><b>2. Neural language models (NLM)</b></summary><br/>
+   
 Neural language models (NLM). NLMs characterize the probability of word sequences by neural networks, e.g., multi-layer perceptron (MLP) and recurrent neural networks (RNNs).
-As a remarkable contribution, is the concept of **distributed representation**.  
-
-**The Basics of Distributed Representations**:    
-In distributed representations, also known as **embeddings**, the idea is that the "meaning" or "semantic content" of a data point is distributed across multiple dimensions. For example, in NLP, words with similar meanings are mapped to points in the vector space that are close to each other. This closeness is not arbitrary but is learned from the context in which words appear. This context-dependent learning is often achieved through neural network models, such as **Word2Vec** or **GloVe**, which process large corpora of text to learn these representations.
+As a remarkable contribution, is the concept of **distributed representation**. Distributed representations, also known as **embeddings**, the idea is that the "meaning" or "semantic content" of a data point is distributed across multiple dimensions. For example, in NLP, words with similar meanings are mapped to points in the vector space that are close to each other. This closeness is not arbitrary but is learned from the context in which words appear. This context-dependent learning is often achieved through neural network models, such as **Word2Vec** or **GloVe**, which process large corpora of text to learn these representations.
 
 One of the key advantages of distributed representations is their ability to capture fine-grained semantic relationships. For instance, in a well-trained word embedding space, synonyms would be represented by vectors that are close together, and it's even possible to perform arithmetic operations with these vectors that correspond to meaningful semantic operations (e.g., "king" - "man" + "woman" might result in a vector close to "queen").
 
@@ -44,18 +46,28 @@ Distributed representations have a wide range of applications, particularly in t
 **Information Retrieval**: Finding relevant documents in response to a query.  
 **Sentiment Analysis**: Determining the sentiment expressed in a piece of text.  
 
-Moreover, distributed representations are not limited to text data. They can also be applied to other types of data, such as images, where deep learning models learn to represent images as high-dimensional vectors that capture visual features and semantics.  
+Moreover, distributed representations are not limited to text data. They can also be applied to other types of data, such as images, where deep learning models learn to represent images as high-dimensional vectors that capture visual features and semantics. 
+</details> 
 
 ## Different training approaches of Language model:
 
-1. **Causal Language Models (e.g., GPT-3)**:
-   Causal language models, also known as **autoregressive models**, generate text by predicting the next word in a sequence given the previous words. These models are trained to maximize the likelihood of the next word using techniques like the transformer architecture. During training, the input to the model is the entire sequence up to a given token, and the model's goal is to predict the next token. This type of model is useful for tasks such as **text generation**, **completion**, and **summarization**.
+<details>
+  <summary><b>1. Causal Language Models (e.g., GPT-3)</b></summary><br/>
+   
+Causal language models, also known as **autoregressive models**, generate text by predicting the next word in a sequence given the previous words. These models are trained to maximize the likelihood of the next word using techniques like the transformer architecture. During training, the input to the model is the entire sequence up to a given token, and the model's goal is to predict the next token. This type of model is useful for tasks such as **text generation**, **completion**, and **summarization**.
+</details>
 
-2. **Masked Language Models (e.g., BERT)**:
+<details>
+  <summary><b>2. Masked Language Models (e.g., BERT)</b></summary><br/>
+   
    Masked language models (MLMs) are designed to learn contextual representations of words by predicting **masked or missing words** in a sentence. During training, a portion of the input sequence is randomly masked, and the model is trained to predict the original words given the context. MLMs use bidirectional architectures like transformers to capture the dependencies between the masked words and the rest of the sentence. These models excel in tasks such as **text classification**, **named entity recognition**, and **question answering**.
+</details>
 
-3. **Sequence-to-Sequence Models (e.g., T5)**:
-   Sequence-to-sequence (Seq2Seq) models are trained to map an input sequence to an output sequence. They consist of **an encoder** that processes the input sequence and **a decoder** that generates the output sequence. Seq2Seq models are widely used in tasks such as **machine translation**, **text summarization**, and **dialogue systems**. They can be trained using techniques like recurrent neural networks (RNNs) or transformers. The training objective is to maximize the likelihood of generating the correct output sequence given the input.
+<details>
+  <summary><b>3. Sequence-to-Sequence Models (e.g., T5)</b></summary><br/>
+   
+Sequence-to-sequence (Seq2Seq) models are trained to map an input sequence to an output sequence. They consist of **an encoder** that processes the input sequence and **a decoder** that generates the output sequence. Seq2Seq models are widely used in tasks such as **machine translation**, **text summarization**, and **dialogue systems**. They can be trained using techniques like recurrent neural networks (RNNs) or transformers. The training objective is to maximize the likelihood of generating the correct output sequence given the input.
+</details>
 
 It's important to note that these training approaches are **not mutually exclusive**, and researchers often combine them or employ variations to achieve specific goals. For example, models like T5 combine the autoregressive and masked language model training objectives to learn a diverse range of tasks.
 
@@ -96,7 +108,7 @@ Here are the advantages and disadvantages of N-gram language models:
   3. **Limited Generalization**: N-gram models often struggle with generalization to unseen or rare word combinations. They may assign low probabilities to valid but infrequent word sequences, leading to suboptimal predictions in such cases.
   4. **Lack of Linguistic Understanding**: N-gram models do not incorporate linguistic knowledge explicitly. They cannot capture syntactic or semantic relationships between words, limiting their ability to generate coherent and contextually appropriate language.  
   
-  Here's an example of using n-grams in Torchtext:
+Here's an example of using n-grams in Torchtext:
   
 ```
 import torchtext
