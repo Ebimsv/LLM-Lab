@@ -121,7 +121,7 @@ Here are the advantages and disadvantages of N-gram language models:
   
 Here's an example of using n-grams in Torchtext:
   
-```
+```python
 import torchtext
 from torchtext.data import get_tokenizer
 from torchtext.data.utils import ngrams_iterator
@@ -164,7 +164,8 @@ RNNs are the fundamental type of neural network for sequential data processing. 
 ![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/RNN.png)
 
 PyTorch code snippet for defining a basic RNN in PyTorch:
-```
+
+```python
 import torch
 import torch.nn as nn
 
@@ -216,7 +217,8 @@ LSTM is an extension of the RNN architecture that addresses the vanishing gradie
 - **Output Gate**: Controls output flow, determines output selection.
 
 PyTorch code snippet for defining a basic LSTM in PyTorch:
-```
+
+```python
 import torch
 import torch.nn as nn
 
@@ -260,7 +262,7 @@ GRU is another variation of the RNN architecture that aims to simplify the LSTM 
 
 Overall, LSTM and GRU models overcome some of the limitations of traditional RNNs, particularly in capturing long-term dependencies. LSTMs excel in preserving contextual information, while GRUs offer a more computationally efficient alternative. The choice between LSTM and GRU depends on the specific requirements of the task and the available computational resources.
 
-```
+```python
 import torch
 import torch.nn as nn
 
@@ -382,69 +384,520 @@ This repository contains code for performing exploratory data analysis on the UT
 
 1. [Download WikiText-2 dataset](#Download-WikiText-2-dataset)
 2. [Tokenize data and build a vocabulary](#Tokenize-data-and-build-a-vocabulary)
-3. [Plot Histograms for Age, Gender, and Ethnicity](#plot-histograms-for-age-gender-and-ethnicity)
-4. [Calculate Cross-Tabulation of Gender and Ethnicity](#calculate-cross-tabulation-of-gender-and-ethnicity)
-5. [Create Violin Plots and Box Plots for Age (Separated by Gender)](#create-violin-plots-and-box-plots-for-age-separated-by-gender)
-6. [Create Violin Plots and Box Plots for Age (Separated by Ethnicity)](#create-violin-plots-and-box-plots-for-age-separated-by-ethnicity)
 
 <details>
-  <summary><b>1. Download WikiText-2 dataset</b></summary><br
+  <summary><b>1. Download WikiText-2 dataset</b></summary><br/>
 
-To download a dataset using Torchtext, you can use the `torchtext.datasets` module in Python. 
+To download a dataset using Torchtext, you can use the `torchtext.datasets` module. 
 Here's an example of how to download the Wikitext-2 dataset using Torchtext:  
 
-```
+```python
 import torchtext
 from torchtext.datasets import WikiText2  
-data_path = "path/to/save/dataset"
-train_dataset, valid_dataset, test_dataset = WikiText2(root=data_path) 
+data_path = "data"
+train_iter, valid_iter, test_iter = WikiText2(root=data_path) 
+```
+
+Initially, I tried to use the provided code to load the WikiText-2 dataset, but encountered an issue with the URL (https://s3.amazonaws.com/research.metamind.io/wikitext/wikitext-2-v1.zip) not working for me. To overcome this, I decided to leverage the `torchtext` library and create a custom implementation of the dataset loader.
+
+Since the original URL was not working, I downloaded the train, validation, and test datasets from a GitHub repository and placed them in the `'data/datasets/WikiText2'` directory.
+
+## Code Explanation
+Here's a breakdown of the code:
+
+```python
+import os
+from functools import partial
+from typing import Union, Tuple
+
+from torchdata.datapipes.iter import FileOpener, IterableWrapper
+from torchtext.data.datasets_utils import _wrap_split_argument, _create_dataset_directory
+
+DATA_DIR = "data"
+
+NUM_LINES = {
+    "train": 36718,
+    "valid": 3760,
+    "test": 4358,
+}
+
+DATASET_NAME = "WikiText2"
+
+_EXTRACTED_FILES = {
+    "train": "wiki.train.tokens",
+    "test": "wiki.test.tokens",
+    "valid": "wiki.valid.tokens",
+}
+
+
+def _filepath_fn(root, split):
+    return os.path.join(root, _EXTRACTED_FILES[split])
+
+
+@_create_dataset_directory(dataset_name=DATASET_NAME)
+@_wrap_split_argument(("train", "valid", "test"))
+
+def WikiText2(root: str, split: Union[Tuple[str], str]):
+    url_dp = IterableWrapper([_filepath_fn(DATA_DIR, split)])
+    data_dp = FileOpener(url_dp, encoding="utf-8").readlines(strip_newline=False, return_path=False).shuffle().set_shuffle(False).sharding_filter()
+    return data_dp
+```
+
+## Usage
+To use the WikiText-2 dataset loader, simply import the WikiText2 function and call it with the desired data split:
+
+```python
+train_data = WikiText2(root="data/datasets/WikiText2", split="train")
+valid_data = WikiText2(root="data/datasets/WikiText2", split="valid")
+test_data = WikiText2(root="data/datasets/WikiText2", split="test")
+```
+
+## Acknowledgements
+This implementation is inspired by the official torchtext dataset loaders, and leverages the torchdata and torchtext libraries to provide a seamless and efficient data loading experience.
+
+</details>
+
+<details>
+  <summary><b>2. Tokenize data, building and saving vocabulary </b></summary><br/>
+
+Building a vocabulary is a crucial step in many natural language processing tasks, as it allows you to represent words as unique identifiers that can be used in machine learning models. This Markdown document demonstrates how to build a vocabulary from a set of training data and save it for future use.
+
+## Function Explanation
+
+Here's a function that encapsulates the process of building and saving a vocabulary:
+
+```python
+import torch
+from torchtext.data.utils import get_tokenizer
+from torchtext.vocab import build_vocab_from_iterator
+
+def build_and_save_vocabulary(train_iter, vocab_path='vocab.pt', min_freq=4):
+    """
+    Build a vocabulary from the training data iterator and save it to a file.
+    
+    Args:
+        train_iter (iterator): An iterator over the training data.
+        vocab_path (str, optional): The path to save the vocabulary file. Defaults to 'vocab.pt'.
+        min_freq (int, optional): The minimum frequency of a word to be included in the vocabulary. Defaults to 4.
+    
+    Returns:
+        torchtext.vocab.Vocab: The built vocabulary.
+    """
+    # Get the tokenizer
+    tokenizer = get_tokenizer("basic_english")
+    
+    # Build the vocabulary
+    vocab = build_vocab_from_iterator(map(tokenizer, train_iter), specials=['<unk>'], min_freq=min_freq)
+    
+    # Set the default index to the unknown token
+    vocab.set_default_index(vocab['<unk>'])
+    
+    # Save the vocabulary
+    torch.save(vocab, vocab_path)
+    
+    return vocab
+```
+
+Here's how you can use this function:
+
+```python
+# Assuming you have a training data iterator named `train_iter`
+vocab = build_and_save_vocabulary(train_iter, vocab_path='my_vocab.pt')
+
+# You can now use the vocabulary
+print(len(vocab))  # 23652
+print(vocab(['ebi', 'AI'.lower(), 'qwerty']))  # [0, 1973, 0]
+```
+
+## Explanation of the Function
+
+1. **Function Definition**: The `build_and_save_vocabulary` function takes three arguments: `train_iter` (an iterator over the training data), `vocab_path` (the path to save the vocabulary file, with a default of 'vocab.pt'), and `min_freq` (the minimum frequency of a word to be included in the vocabulary, with a default of 4).
+2. **Tokenization**: The function first gets the `basic_english` tokenizer, which performs basic tokenization on English text.
+3. **Vocabulary Building**: The function then builds the vocabulary using the `build_vocab_from_iterator` function, passing the training data iterator (after tokenization) and specifying the `'<unk>'` special token and the minimum frequency threshold.
+4. **Default Index Setting**: The function sets the default index of the vocabulary to the ID of the `'<unk>'` token, which means that any word not found in the vocabulary will be mapped to the unknown token.
+5. **Return Value**: The function returns the built vocabulary.
+
+## Usage
+
+To use this function, you need to have a training data iterator named `train_iter`. Then, you can call the `build_and_save_vocabulary` function, passing the `train_iter` and specifying the desired vocabulary file path and minimum frequency threshold.
+
+The function will build the vocabulary, save it to the specified file, and return the `Vocab` object, which you can then use in your downstream tasks.
+</details>
+
+### 2. Exploratory Data Analysis (EDA)
+
+<details>
+  <summary><b>1. Analyzing Mean Sentence Length in Wikitext-2 </b></summary><br/>
+
+This code provides a way to analyze the mean sentence length in the Wikitext-2 dataset. Here's a breakdown of the code:
+
+```python
+import matplotlib.pyplot as plt
+
+def compute_mean_sentence_length(data_iter):
+    """
+    Computes the mean sentence length for the given data iterator.
+    
+    Args:
+        data_iter (iterable): An iterable of text data, where each element is a string representing a line of text.
+    
+    Returns:
+        float: The mean sentence length.
+    """
+    total_sentence_count = 0
+    total_sentence_length = 0
+
+    for line in data_iter:
+        sentences = line.split('.')  # Split the line into individual sentences
+
+        for sentence in sentences:
+            tokens = sentence.strip().split()  # Tokenize the sentence
+            sentence_length = len(tokens)
+
+            if sentence_length > 0:
+                total_sentence_count += 1
+                total_sentence_length += sentence_length
+
+    mean_sentence_length = total_sentence_length / total_sentence_count
+    return mean_sentence_length
+
+# Compute mean sentence length for each dataset
+train_mean = compute_mean_sentence_length(train_iter)
+valid_mean = compute_mean_sentence_length(valid_iter)
+test_mean  = compute_mean_sentence_length(test_iter)
+
+# Plot the results
+datasets = ['Train', 'Valid', 'Test']
+means = [train_mean, valid_mean, test_mean]
+
+plt.figure(figsize=(6, 4))
+plt.bar(datasets, means)
+plt.xlabel('Dataset')
+plt.ylabel('Mean Sentence Length')
+plt.title('Mean Sentence Length in Wikitext-2')
+plt.grid(True)
+plt.show()
+```
+
+![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/EDA-mean-sentences.png)
+  </details>
+
+<details>
+  <summary><b>2. Analyze the most common and least common words in the dataset</b></summary><br/>
+
+```python
+from collections import Counter
+
+# Compute word frequencies in the training dataset
+freqs = Counter()
+for tokens in map(tokenizer, train_iter):
+    freqs.update(tokens)
+
+# Find the 10 least common words
+least_common_words = freqs.most_common()[:-11:-1]
+print("Least Common Words:")
+for word, count in least_common_words:
+    print(f"{word}: {count}")
+
+# Find the 10 most common words
+most_common_words = freqs.most_common(10)
+print("\nMost Common Words:")
+for word, count in most_common_words:
+    print(f"{word}: {count}")
 ```
 </details>
 
 <details>
-  <summary><b>2. Tokenize data and build a vocabulary</b></summary><br/>
+<summary><b>3. Count the number of words that repeat 3, 4, and 5 times in the training dataset</b></summary><br/>
 
-To build a vocabulary and save it in PyTorch using `build_vocab_from_iterator` from `torchtext.vocab` for the Wikitext-2 dataset while using a tokenizer from `torchtext.data.utils.get_tokenizer`, you can follow these steps:
+```python
+from collections import Counter
 
-Import the necessary modules:
+# Compute word frequencies in the training dataset
+freqs = Counter()
+for tokens in map(tokenizer, train_iter):
+    freqs.update(tokens)
 
+# Count the number of words that repeat 3, 4, and 5 times
+count_3 = count_4 = count_5 = 0
+for word, freq in freqs.items():
+    if freq == 3:
+        count_3 += 1
+    elif freq == 4:
+        count_4 += 1
+    elif freq == 5:
+        count_5 += 1
+
+print(f"Number of words that appear 3 times: {count_3}") # 5130
+print(f"Number of words that appear 4 times: {count_4}") # 3243
+print(f"Number of words that appear 5 times: {count_5}") # 2261
 ```
-import torch
-import torchtext
-from torchtext.datasets import Wikitext2
-from torchtext.vocab import build_vocab_from_iterator
-from torchtext.data.utils import get_tokenizer
+</details>
+
+<details>
+<summary><b>4. Word Length Distribution</b></summary><br/>
+- Compute the distribution of word lengths (i.e., the number of characters per word) in the dataset.
+- This can reveal insights about the writing style or genre of the corpus.
+
+```python
+from collections import Counter
+import matplotlib.pyplot as plt
+
+# Compute the word lengths in the training dataset
+word_lengths = []
+for tokens in map(tokenizer, train_iter):
+    word_lengths.extend(len(word) for word in tokens)
+
+# Create a frequency distribution of word lengths
+word_length_counts = Counter(word_lengths)
+
+# Plot the word length distribution
+plt.figure(figsize=(10, 6))
+plt.bar(word_length_counts.keys(), word_length_counts.values())
+plt.xlabel("Word Length")
+plt.ylabel("Frequency")
+plt.title("Word Length Distribution in Wikitext-2 Dataset")
+plt.show()
+```
+![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/EDA-Word-Length-Distribution.png)
+
+</details>
+
+<details>
+<summary><b>5. Explore Part-of-Speech (POS) Tagging</b></summary><br/>
+- Perform part-of-speech tagging on the dataset to categorize words into grammatical classes (e.g., nouns, verbs, adjectives).
+- Analyze the distribution of different POS tags and identify any interesting patterns or deviations from standard language models.
+
+## Example
+```python
+import spacy
+import en_core_web_sm
+
+# Load the small English language model from SpaCy
+nlp = spacy.load("en_core_web_sm")
+
+# Alternatively, you can use the en_core_web_sm module to load the model
+nlp = en_core_web_sm.load()
+
+# Process the given sentence using the loaded language model
+doc = nlp("This is a sentence.")
+
+# Print the text and part-of-speech tag for each token in the sentence
+print([(w.text, w.pos_) for w in doc])
+
+# [('This', 'PRON'), ('is', 'AUX'), ('a', 'DET'), ('sentence', 'NOUN'), ('.', 'PUNCT')]
 ```
 
-Load the Wikitext-2 dataset:
+For Wikitext-2 dataset:
 
+```python
+import spacy
+
+# Load the English language model
+nlp = spacy.load("en_core_web_sm")
+
+# Perform POS tagging on the training dataset
+pos_tags = []
+for tokens in map(tokenizer, train_iter):
+    doc = nlp(" ".join(tokens))
+    pos_tags.extend([(token.text, token.pos_) for token in doc])
+
+# Count the frequency of each POS tag
+pos_tag_counts = Counter(tag for _, tag in pos_tags)
+
+# Print the most common POS tags
+print("Most Common Part-of-Speech Tags:")
+for tag, count in pos_tag_counts.most_common(10):
+    print(f"{tag}: {count}")
+
+# Visualize the POS tag distribution
+plt.figure(figsize=(12, 6))
+plt.bar(pos_tag_counts.keys(), pos_tag_counts.values())
+plt.xticks(rotation=90)
+plt.xlabel("Part-of-Speech Tag")
+plt.ylabel("Frequency")
+plt.title("Part-of-Speech Tag Distribution in Wikitext-2 Dataset")
+plt.show()
 ```
-train_dataset, valid_dataset, test_dataset = Wikitext2()
+![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/EDA-POS.png)
+
+Here's a brief explanation of the most common POS tags in the provided output:
+
+1. **NOUN**: Nouns represent people, places, things, or ideas.
+
+2. **ADP**: Adpositions, such as prepositions and postpositions, are used to express relationships between words or phrases.
+
+3. **PUNCT**: Punctuation marks, which are essential for separating and structuring sentences and text.
+
+4. **VERB**: Verbs describe actions, states, or occurrences in the text.
+
+5. **DET**: Determiners, such as articles (e.g., "the," "a," "an"), provide additional information about nouns.
+
+6. **X**: This tag is often used for foreign words, abbreviations, or other language-specific tokens that don't fit into the standard POS categories.
+
+7. **PROPN**: Proper nouns, which represent specific names of people, places, organizations, or other entities.
+
+8. **ADJ**: Adjectives modify or describe nouns and pronouns.
+
+9. **PRON**: Pronouns substitute for nouns, making the text more concise and less repetitive.
+
+10. **NUM**: Numerals, which represent quantities, dates, or other numerical information.
+
+This distribution of POS tags can provide insights into the linguistic characteristics of the text, such as the predominance of nouns, the prevalence of adpositions, or the usage of proper nouns, which can be helpful in tasks like text classification, information extraction, or stylometric analysis.
+</details>
+
+<details>
+<summary><b>6. Investigate Named Entity Recognition (NER)</b></summary><br/>
+- Apply NER to the dataset to identify and classify named entities (e.g., people, organizations, locations).
+- Analyze the types and frequencies of named entities present in the corpus, which can provide insights into the content and focus of the Wikitext-2 dataset.
+
+```python
+import spacy
+import matplotlib.pyplot as plt
+
+# Load the English language model
+nlp = spacy.load("en_core_web_sm")
+
+# Perform NER on the training dataset
+named_entities = []
+for tokens in map(tokenizer, train_iter):
+    doc = nlp(" ".join(tokens))
+    named_entities.extend([(ent.text, ent.label_) for ent in doc.ents])
+
+# Count the frequency of each named entity type
+ner_counts = Counter(label for _, label in named_entities)
+
+# Print the most common named entity types
+print("Most Common Named Entity Types:")
+for label, count in ner_counts.most_common(10):
+    print(f"{label}: {count}")
+
+# Visualize the named entity distribution
+plt.figure(figsize=(12, 6))
+plt.bar(ner_counts.keys(), ner_counts.values())
+plt.xticks(rotation=90)
+plt.xlabel("Named Entity Type")
+plt.ylabel("Frequency")
+plt.title("Named Entity Distribution in Wikitext-2 Dataset")
+plt.show()
 ```
 
-Define a tokenizer using get_tokenizer:
+![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/EDA-NER.png)
 
-```
-tokenizer = get_tokenizer('basic_english')
+Here's a brief explanation of the most common named entity types in the output:
+
+1. **DATE**: Represents specific dates, time periods, or temporal expressions, such as "June 15, 2024" or "last year".
+
+2. **CARDINAL**: Includes numerical values, such as quantities, ages, or measurements.
+
+3. **PERSON**: Identifies the names of individual people.
+
+4. **GPE** (Geopolitical Entity): This entity type represents named geographical locations, such as countries, cities, or states.
+
+5. **NORP** (Nationalities, Religious, or Political Groups): This entity type includes named groups or affiliations based on nationality, religion, or political ideology.
+
+6. **ORDINAL**: Represents ordinal numbers, such as "first," "second," or "3rd".
+
+7. **ORG** (Organization): The names of companies, institutions, or other organized groups.
+
+8. **QUANTITY**: Includes non-numeric quantities, such as "a few" or "several".
+
+9. **LOC** (Location): Represents named geographical locations, such as continents, regions, or landforms.
+
+10. **MONEY**: Identifies monetary values, such as dollar amounts or currency names.
+
+This distribution of named entity types can provide valuable insights into the content and focus of the text. For example, the prominence of DATE and CARDINAL entities may suggest a text that deals with numerical or temporal information, while the prevalence of PERSON, ORG, and GPE entities could indicate a text that discusses people, organizations, and geographical locations.
+
+Understanding the named entity distribution can be useful in a variety of applications, such as information extraction, question answering, and text summarization, where identifying and categorizing key named entities is crucial for understanding the context and content of the text.
+
+</details>
+
+<details>
+<summary><b>7. Perform Topic Modeling (To-do)</b></summary><br/>
+- Apply topic modeling techniques, such as Latent Dirichlet Allocation (LDA), to uncover the underlying thematic structure of the corpus.
+- Analyze the identified topics and their distributions, which can reveal the main themes and subject areas covered in the Wikitext-2 dataset.
+</details>
+
+
+<details>
+<summary><b>8. Generating a Word Cloud for the Wikitext-2 Training Dataset</b></summary><br/>
+This code generates a single word cloud visualization that highlights the most frequent words in the entire Wikitext-2 training dataset, providing a high-level overview of the prominent themes and topics present in the corpus.
+
+```python
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
+# Load the training dataset
+with open("data/wiki.train.tokens", "r") as f:
+    train_text = f.read().split()
+
+# Create a string from the entire training dataset
+text = " ".join(train_text)
+
+# Generate the word cloud
+wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
+
+# Plot the word cloud
+plt.figure(figsize=(12, 8))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis('off')
+plt.title('Word Cloud for Wikitext-2 Training Dataset')
+plt.show()
 ```
 
-Define a function to yield tokenized sentences from the dataset:
+![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/EDA-WordCloud.png)
 
-```
-def yield_tokens(dataset):
-    for example in dataset:
-        yield tokenizer(example)
+</details>
+
+<details>
+<summary><b>9. Clustering Words by Semantic Similarity and Visualizing Word Clouds</b></summary><br/>
+- This code clusters words from the Wikitext-2 dataset based on their semantic similarity using a BERT-based sentence transformer model, and then generates word clouds to visualize the most representative words in each semantic cluster.
+
+```python
+from sentence_transformers import SentenceTransformer
+from sklearn.cluster import KMeans
+from collections import defaultdict
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
+# Load the BERT-based sentence transformer model
+model = SentenceTransformer('bert-base-nli-mean-tokens')
+
+# Load the training dataset
+with open("data/wiki.valid.tokens", "r") as f:
+    train_text = f.read().split()
+
+# Compute the BERT embeddings for each unique word in the dataset
+unique_words = set(train_text)
+word_embeddings = model.encode(list(unique_words))
+
+# Cluster the words using K-Means
+num_clusters = 5
+kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+clusters = kmeans.fit_predict(word_embeddings)
+
+# Group the words by cluster
+word_clusters = defaultdict(list)
+for i, word in enumerate(unique_words):
+    word_clusters[clusters[i]].append(word)
+
+# Create a word cloud for each cluster
+fig, axes = plt.subplots(1, 5, figsize=(14, 12))
+axes = axes.flatten()
+
+for cluster_id, cluster_words in word_clusters.items():
+    word_cloud = WordCloud(width=400, height=200, background_color='white').generate(' '.join(cluster_words))
+    axes[cluster_id].imshow(word_cloud, interpolation='bilinear')
+    axes[cluster_id].set_title(f"Cluster {cluster_id}")
+    axes[cluster_id].axis('off')
+
+plt.subplots_adjust(wspace=0.4, hspace=0.6)
+
+plt.tight_layout()
+plt.show()
 ```
 
-Build the vocabulary using build_vocab_from_iterator:
+![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/EDA-WordCloud-clusters.png)
 
-```
-vocab = build_vocab_from_iterator(yield_tokens(train_dataset))
-```
 
-Save the vocabulary to a file:
-
-```
-torch.save(vocab, 'wikitext2_vocab.pt')
-```
 </details>
