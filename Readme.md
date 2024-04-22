@@ -376,7 +376,7 @@ The **WikiText-2** dataset is a small version of the **WikiText-103** dataset as
 
 ![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/wikitext-2.png)
 
-### 1. Prepare and preprocess data 
+### Prepare and preprocess data 
 
 This repository contains code for performing exploratory data analysis on the UTK dataset, which consists of images categorized by age, gender, and ethnicity.
 
@@ -402,7 +402,7 @@ Initially, I tried to use the provided code to load the WikiText-2 dataset, but 
 
 Since the original URL was not working, I downloaded the train, validation, and test datasets from a GitHub repository and placed them in the `'data/datasets/WikiText2'` directory.
 
-## Code Explanation
+#### Code Explanation
 Here's a breakdown of the code:
 
 ```python
@@ -443,7 +443,7 @@ def WikiText2(root: str, split: Union[Tuple[str], str]):
     return data_dp
 ```
 
-## Usage
+#### Usage
 To use the WikiText-2 dataset loader, simply import the WikiText2 function and call it with the desired data split:
 
 ```python
@@ -452,17 +452,17 @@ valid_data = WikiText2(root="data/datasets/WikiText2", split="valid")
 test_data = WikiText2(root="data/datasets/WikiText2", split="test")
 ```
 
-## Acknowledgements
+#### Acknowledgements
 This implementation is inspired by the official torchtext dataset loaders, and leverages the torchdata and torchtext libraries to provide a seamless and efficient data loading experience.
 
 </details>
 
 <details>
-  <summary><b>2. Tokenize data, building and saving vocabulary </b></summary><br/>
+  <summary><b>Tokenize data, building and saving vocabulary </b></summary><br/>
 
 Building a vocabulary is a crucial step in many natural language processing tasks, as it allows you to represent words as unique identifiers that can be used in machine learning models. This Markdown document demonstrates how to build a vocabulary from a set of training data and save it for future use.
 
-## Function Explanation
+### Function Explanation
 
 Here's a function that encapsulates the process of building and saving a vocabulary:
 
@@ -509,7 +509,7 @@ print(len(vocab))  # 23652
 print(vocab(['ebi', 'AI'.lower(), 'qwerty']))  # [0, 1973, 0]
 ```
 
-## Explanation of the Function
+#### Explanation of the Function
 
 1. **Function Definition**: The `build_and_save_vocabulary` function takes three arguments: `train_iter` (an iterator over the training data), `vocab_path` (the path to save the vocabulary file, with a default of 'vocab.pt'), and `min_freq` (the minimum frequency of a word to be included in the vocabulary, with a default of 4).
 2. **Tokenization**: The function first gets the `basic_english` tokenizer, which performs basic tokenization on English text.
@@ -517,14 +517,14 @@ print(vocab(['ebi', 'AI'.lower(), 'qwerty']))  # [0, 1973, 0]
 4. **Default Index Setting**: The function sets the default index of the vocabulary to the ID of the `'<unk>'` token, which means that any word not found in the vocabulary will be mapped to the unknown token.
 5. **Return Value**: The function returns the built vocabulary.
 
-## Usage
+#### Usage
 
 To use this function, you need to have a training data iterator named `train_iter`. Then, you can call the `build_and_save_vocabulary` function, passing the `train_iter` and specifying the desired vocabulary file path and minimum frequency threshold.
 
 The function will build the vocabulary, save it to the specified file, and return the `Vocab` object, which you can then use in your downstream tasks.
 </details>
 
-### 2. Exploratory Data Analysis (EDA)
+### Exploratory Data Analysis (EDA)
 
 <details>
   <summary><b>1. Analyzing Mean Sentence Length in Wikitext-2 </b></summary><br/>
@@ -636,7 +636,7 @@ print(f"Number of words that appear 5 times: {count_5}") # 2261
 
 <details>
 <summary><b>4. Word Length Distribution</b></summary><br/>
-- Compute the distribution of word lengths (i.e., the number of characters per word) in the dataset.
+- Compute the distribution of word lengths (i.e., the number of characters per word) in the dataset.  
 - This can reveal insights about the writing style or genre of the corpus.
 
 ```python
@@ -665,10 +665,10 @@ plt.show()
 
 <details>
 <summary><b>5. Explore Part-of-Speech (POS) Tagging</b></summary><br/>
-- Perform part-of-speech tagging on the dataset to categorize words into grammatical classes (e.g., nouns, verbs, adjectives).
+- Perform part-of-speech tagging on the dataset to categorize words into grammatical classes (e.g., nouns, verbs, adjectives).   
 - Analyze the distribution of different POS tags and identify any interesting patterns or deviations from standard language models.
 
-## Example
+#### Example
 ```python
 import spacy
 import en_core_web_sm
@@ -748,7 +748,7 @@ This distribution of POS tags can provide insights into the linguistic character
 
 <details>
 <summary><b>6. Investigate Named Entity Recognition (NER)</b></summary><br/>
-- Apply NER to the dataset to identify and classify named entities (e.g., people, organizations, locations).
+- Apply NER to the dataset to identify and classify named entities (e.g., people, organizations, locations).    
 - Analyze the types and frequencies of named entities present in the corpus, which can provide insights into the content and focus of the Wikitext-2 dataset.
 
 ```python
@@ -814,7 +814,7 @@ Understanding the named entity distribution can be useful in a variety of applic
 
 <details>
 <summary><b>7. Perform Topic Modeling (To-do)</b></summary><br/>
-- Apply topic modeling techniques, such as Latent Dirichlet Allocation (LDA), to uncover the underlying thematic structure of the corpus.
+- Apply topic modeling techniques, such as Latent Dirichlet Allocation (LDA), to uncover the underlying thematic structure of the corpus.   
 - Analyze the identified topics and their distributions, which can reveal the main themes and subject areas covered in the Wikitext-2 dataset.
 </details>
 
@@ -851,7 +851,7 @@ plt.show()
 
 <details>
 <summary><b>9. Clustering Words by Semantic Similarity and Visualizing Word Clouds</b></summary><br/>
-- This code clusters words from the Wikitext-2 dataset based on their semantic similarity using a BERT-based sentence transformer model, and then generates word clouds to visualize the most representative words in each semantic cluster.
+This code clusters words from the Wikitext-2 dataset based on their semantic similarity using a BERT-based sentence transformer model, and then generates word clouds to visualize the most representative words in each semantic cluster.
 
 ```python
 from sentence_transformers import SentenceTransformer
@@ -896,8 +896,207 @@ plt.subplots_adjust(wspace=0.4, hspace=0.6)
 plt.tight_layout()
 plt.show()
 ```
-
 ![alt text](https://github.com/Ebimsv/Torch-Linguist/blob/main/pics/EDA-WordCloud-clusters.png)
+</details>
+
+### Transform and prepare dataset
+
+The two data formats, `N x B x L` and `M x L`, are commonly used in language modeling tasks, particularly in the context of neural network-based models.
+
+1. `N x B x L` format:
+   - This format is often used when working with batched data for training neural network-based language models.
+   - `N` represents the number of batches. In this case, the dataset is divided into `N` smaller batches, which is a common practice to improve the efficiency and stability of the training process.
+   - `B` is the batch size, which represents the number of samples (e.g., sentences, paragraphs, or documents) within each batch.
+   - `L` is the length of a sample within each batch, which typically corresponds to the number of tokens (words) in a sample.
+   - This format allows the model to process multiple samples (batch) at once, which can significantly speed up the training process compared to processing one sample at a time.
+   - The advantage of this format is that it enables efficient batch-based training, where the model can learn from multiple samples simultaneously, leveraging the computational power of modern hardware (e.g., GPUs) to accelerate the training process.
+
+2. `M x L` format:
+   - This format is simpler and more straightforward compared to the `N x B x L` format.
+   - `M` is equal to `N x B`, which represents the total number of samples (e.g., sentences, paragraphs, or documents) in the dataset.
+   - `L` is the length of each sample, which corresponds to the number of tokens (words) in the sample.
+   - This format is less efficient for training neural network-based language models, as the samples are not organized into batches. However, it can be more suitable for certain tasks or when the dataset size is relatively small.
+   - The advantage of this format is that it is easier to work with and can be more intuitive for certain data processing tasks, such as simple text analysis or feature extraction.
+
+The choice between these two formats depends on the specific requirements of your language modeling task and the capabilities of the neural network architecture you're working with. If you're training a neural network-based language model, the `N x B x L` format is typically preferred, as it allows for efficient batch-based training and can lead to faster convergence and better performance. However, if your task doesn't involve neural networks or if the dataset is relatively small, the `M x L` format may be more suitable.
+
+<details>
+<summary><b>1. Function for prepare language model data</b></summary><br/>
+
+```python
+def prepare_language_model_data(raw_text_iterator, sequence_length):
+    """
+    Prepare PyTorch tensors for a language model.
+
+    Args:
+        raw_text_iterator (iterable): An iterator of raw text data.
+        sequence_length (int): The length of the input and target sequences.
+
+    Returns:
+        tuple: A tuple containing two PyTorch tensors:
+            - inputs (torch.Tensor): A tensor of input sequences.
+            - targets (torch.Tensor): A tensor of target sequences.
+    """
+    # Convert the raw text iterator into a single PyTorch tensor
+    data = torch.cat([torch.LongTensor(vocab(tokenizer(line))) for line in raw_text_iterator])
+
+    # Calculate the number of complete sequences that can be formed
+    num_sequences = len(data) // sequence_length
+
+    # Calculate the remainder of the data length divided by the sequence length
+    remainder = len(data) % sequence_length
+
+    # If the remainder is 0, add a single <unk> token to the end of the data tensor
+    if remainder == 0:
+        unk_tokens = torch.LongTensor([vocab['<unk>']])
+        data = torch.cat([data, unk_tokens])
+
+    # Extract the input and target sequences from the data tensor
+    inputs = data[:num_sequences*sequence_length].reshape(-1, sequence_length)
+    targets = data[1:num_sequences*sequence_length+1].reshape(-1, sequence_length)
+
+    print(len(inputs), len(targets))
+    return inputs, targets
+```
+#### Usage
+
+```python
+sequence_length = 30
+X_train, y_train = prepare_language_model_data(train_iter, sequence_length)
+X_valid, y_valid = prepare_language_model_data(valid_iter, sequence_length)
+X_test, y_test   = prepare_language_model_data(test_iter, sequence_length)
+
+X_train.shape, y_train.shape, X_valid.shape, y_valid.shape, X_test.shape, y_test.shape
+
+(torch.Size([68333, 30]),
+ torch.Size([68333, 30]),
+
+ torch.Size([7147, 30]),
+ torch.Size([7147, 30]),
+
+ torch.Size([8061, 30]),
+ torch.Size([8061, 30]))
+
+```
+</details>
 
 
+<details>
+<summary><b>2. Custom dataset</b></summary><br/>
+
+#### Language Model Dataset
+
+This code defines a PyTorch `Dataset` class for working with language model data. The `LanguageModelDataset` class takes in input and target tensors and provides the necessary methods for accessing the data.
+
+```python
+class LanguageModelDataset(Dataset):
+    def __init__(self, inputs, targets):
+        self.inputs = inputs
+        self.targets = targets
+
+    def __len__(self):
+        return self.inputs.shape[0]
+
+    def __getitem__(self, idx):
+        return self.inputs[idx], self.targets[idx]
+```
+
+#### Usage
+
+The `LanguageModelDataset` class can be used as follows:
+
+```python
+# Create the datasets
+train_set = LanguageModelDataset(X_train, y_train)
+valid_set = LanguageModelDataset(X_valid, y_valid)
+test_set  = LanguageModelDataset(X_test, y_test)
+
+# Create data loaders (optional)
+train_loader = DataLoader(train_set, batch_size=32, shuffle=True)
+valid_loader = DataLoader(valid_set, batch_size=32)
+test_loader  = DataLoader(test_set, batch_size=32)
+
+# Access the data
+x_batch, y_batch = next(iter(train_loader))
+print(f"Input batch shape: {x_batch.shape}")  # Input batch shape: torch.Size([32, 30])
+print(f"Target batch shape: {y_batch.shape}") # Target batch shape: torch.Size([32, 30])
+```
+</details>
+
+## Model
+
+<details>
+<summary><b># Custom PyTorch Language Model with Flexible Embedding Options</b></summary><br/>
+
+The code defines a custom PyTorch language model that allows you to use different types of word embeddings, including `randomly` initialized embeddings, pre-trained `GloVe` embeddings, pre-trained `FastText` embeddings, by simply specifying the `embedding_type` argument when creating the model instance.
+
+```python
+import torch.nn as nn
+from torchtext.vocab import GloVe, FastText
+
+
+class LanguageModel(nn.Module):
+    def __init__(self, vocab_size, embedding_dim, 
+                 hidden_dim, num_layers, dropout_embd=0.5, 
+                 dropout_rnn=0.5, embedding_type='random'):
+        
+        super().__init__()
+        self.num_layers = num_layers
+        self.hidden_dim = hidden_dim
+        self.embedding_dim = embedding_dim
+        self.embedding_type = embedding_type
+
+        if embedding_type == 'random':
+            self.embedding = nn.Embedding(vocab_size, embedding_dim)
+            self.embedding.weight.data.uniform_(-0.1, 0.1)
+
+        elif embedding_type == 'glove':
+            self.glove = GloVe(name='6B', dim=embedding_dim)
+            self.embedding = nn.Embedding(vocab_size, embedding_dim)
+            self.embedding.weight.data.copy_(self.glove.vectors)
+            self.embedding.weight.requires_grad = False
+
+        elif embedding_type == 'fasttext':
+            self.glove = GloVe(name='6B', dim=embedding_dim)
+            self.embedding = nn.Embedding(vocab_size, embedding_dim)
+            self.embedding.weight.data.copy_(self.fasttext.vectors)
+            self.embedding.weight.requires_grad = False
+   
+        else:
+            raise ValueError("Invalid embedding_type. Choose from 'random', 'glove', 'fasttext'.")
+
+        self.dropout = nn.Dropout(p=dropout_embd)
+        self.lstm = nn.LSTM(embedding_dim, hidden_dim, num_layers=num_layers,
+                           dropout=dropout_rnn, batch_first=True)
+        self.fc = nn.Linear(hidden_dim, vocab_size)
+
+    def forward(self, src):
+        embedding = self.dropout(self.embedding(src))
+        output, hidden = self.lstm(embedding)
+        prediction = self.fc(output)
+        return prediction
+```
+#### usage
+```python
+model = LanguageModel(vocab_size=len(vocab), 
+                      embedding_dim=300, 
+                      hidden_dim=512, 
+                      num_layers=2, 
+                      dropout_embd=0.65, 
+                      dropout_rnn=0.5, 
+                      embedding_type='glove')
+```
+#### Calculating Trainable Parameters in a PyTorch Model
+
+```python
+def num_trainable_params(model):
+    nums = sum(p.numel() for p in model.parameters() if p.requires_grad) / 1e6
+    return nums
+
+# Calculate the number of trainable parameters in the embedding, LSTM, and fully connected layers of the LanguageModel instance 'model'
+num_trainable_params(model.embedding) # (7.0956)
+num_trainable_params(model.lstm)      # (3.76832)
+num_trainable_params(model.fc)        # (12.133476)
+
+```
 </details>
