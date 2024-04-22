@@ -984,8 +984,6 @@ X_train.shape, y_train.shape, X_valid.shape, y_valid.shape, X_test.shape, y_test
 <details>
 <summary><b>2. Custom dataset</b></summary><br/>
 
-#### Language Model Dataset
-
 This code defines a PyTorch `Dataset` class for working with language model data. The `LanguageModelDataset` class takes in input and target tensors and provides the necessary methods for accessing the data.
 
 ```python
@@ -1026,7 +1024,7 @@ print(f"Target batch shape: {y_batch.shape}") # Target batch shape: torch.Size([
 ## Model
 
 <details>
-<summary><b># Custom PyTorch Language Model with Flexible Embedding Options</b></summary><br/>
+<summary><b>Custom PyTorch Language Model with Flexible Embedding Options</b></summary><br/>
 
 The code defines a custom PyTorch language model that allows you to use different types of word embeddings, including `randomly` initialized embeddings, pre-trained `GloVe` embeddings, pre-trained `FastText` embeddings, by simply specifying the `embedding_type` argument when creating the model instance.
 
