@@ -407,7 +407,6 @@ Here's a breakdown of the code:
 
 ```python
 import os
-from functools import partial
 from typing import Union, Tuple
 
 from torchdata.datapipes.iter import FileOpener, IterableWrapper
@@ -1055,7 +1054,7 @@ class LanguageModel(nn.Module):
             self.embedding.weight.requires_grad = False
 
         elif embedding_type == 'fasttext':
-            self.glove = GloVe(name='6B', dim=embedding_dim)
+            self.glove = FastText(language='en')
             self.embedding = nn.Embedding(vocab_size, embedding_dim)
             self.embedding.weight.data.copy_(self.fasttext.vectors)
             self.embedding.weight.requires_grad = False
@@ -1095,6 +1094,5 @@ def num_trainable_params(model):
 num_trainable_params(model.embedding) # (7.0956)
 num_trainable_params(model.lstm)      # (3.76832)
 num_trainable_params(model.fc)        # (12.133476)
-
 ```
 </details>

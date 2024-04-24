@@ -3,3 +3,4 @@ extra
 .idea/
 .vscode
 codes
+.vector_cache
