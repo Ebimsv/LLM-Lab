@@ -635,6 +635,7 @@ print(f"Number of words that appear 5 times: {count_5}") # 2261
 
 <details>
 <summary><b>4. Word Length Distribution</b></summary><br/>
+  
 - Compute the distribution of word lengths (i.e., the number of characters per word) in the dataset.  
 - This can reveal insights about the writing style or genre of the corpus.
 
