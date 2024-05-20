@@ -748,6 +748,7 @@ This distribution of POS tags can provide insights into the linguistic character
 
 <details>
 <summary><b>6. Investigate Named Entity Recognition (NER)</b></summary><br/>
+  
 - Apply NER to the dataset to identify and classify named entities (e.g., people, organizations, locations).    
 - Analyze the types and frequencies of named entities present in the corpus, which can provide insights into the content and focus of the Wikitext-2 dataset.
 
@@ -814,6 +815,7 @@ Understanding the named entity distribution can be useful in a variety of applic
 
 <details>
 <summary><b>7. Perform Topic Modeling (To-do)</b></summary><br/>
+  
 - Apply topic modeling techniques, such as Latent Dirichlet Allocation (LDA), to uncover the underlying thematic structure of the corpus.   
 - Analyze the identified topics and their distributions, which can reveal the main themes and subject areas covered in the Wikitext-2 dataset.
 </details>
