@@ -1,0 +1,5 @@
+numpy==1.23.5  
+torch==2.0.1+cu118  
+torchtext==0.15.2+cpu  
+tqdm==4.66.1  
+portalocker>=2.0.0
