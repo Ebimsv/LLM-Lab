@@ -1,0 +1,65 @@
+seed: 42
+
+data:
+  source: hf_dataset         # hf_dataset | local_text
+  # --- if source=hf_dataset:
+  dataset_name: wikitext
+  dataset_config: wikitext-2-raw-v1
+  text_column: text
+  # --- if source=local_text:
+  local_files:
+    train: data/raw/wiki.train.tokens
+    validation: data/raw/wiki.valid.tokens
+    test: data/raw/wiki.test.tokens
+  # common:
+  block_size: 512
+  streaming: false           # for huge datasets set true
+  max_train_samples: null    # e.g. 20000 for quick demo
+  max_eval_samples: null
+
+tokenizer:
+  # use pretrained OR your trained tokenizer folder
+  # pretrained_name: gpt2
+  tokenizer_dir: artifacts/tokenizer_bpe
+  pad_to_eos_if_missing: true
+
+model:
+  kind: gpt2_from_scratch    # gpt2_from_scratch | pretrained
+  # if pretrained:
+  # pretrained_name: gpt2
+  n_layer: 8
+  n_head: 8
+  n_embd: 512
+  dropout: 0.0
+
+train:
+  output_dir: runs/pretrain_gpt2_small
+  num_train_epochs: 1
+  learning_rate: 3.0e-4
+  warmup_steps: 200
+  weight_decay: 0.1
+
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 8
+
+  logging_steps: 50
+  eval_steps: 500
+  save_steps: 500
+  save_total_limit: 3
+
+  fp16: true
+  bf16: false
+
+  # resume:
+  resume_from_checkpoint: auto   # auto | null | "path/to/checkpoint"
+
+  # reporting:
+  report_to: none                # none | wandb
+  run_name: "pretrain-gpt2-small"
+
+hub:
+  push_to_hub: false
+  repo_id: null                  # "your-username/torch-linguist-pretrain"
+  private: true
+  hub_strategy: "every_save"     # every_save | end

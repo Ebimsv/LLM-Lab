@@ -1,0 +1,13 @@
+tokenizer:
+  out_dir: artifacts/tokenizer_bpe
+  vocab_size: 32000
+  min_frequency: 2
+  special_tokens: ["<unk>", "<pad>", "<bos>", "<eos>"]
+  add_prefix_space: true
+
+data:
+  # local text files used to train tokenizer
+  files:
+    - data/raw/wiki.train.tokens
+    - data/raw/wiki.valid.tokens
+    - data/raw/wiki.test.tokens

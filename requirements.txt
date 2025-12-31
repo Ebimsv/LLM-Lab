@@ -1,5 +1,8 @@
-numpy==1.23.5  
-torch==2.0.1+cu118  
-torchtext==0.15.2+cpu  
-tqdm==4.66.1  
-portalocker>=2.0.0
+torch>=2.1
+transformers>=4.41
+datasets>=2.20
+tokenizers>=0.19
+accelerate>=0.33
+pyyaml>=6.0
+evaluate>=0.4
+huggingface_hub>=0.23

@@ -1,6 +1,5 @@
-extra
 .ipynb_checkpoints
 .idea/
 .vscode
-codes
-.vector_cache
+runs/
+__pycache__/
