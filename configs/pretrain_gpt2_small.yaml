@@ -1,32 +1,40 @@
 seed: 42
 
+# Single flag to control both model and tokenizer
+# Set to true to use pretrained model/tokenizer, false to use local/custom ones
+use_pretrained: true  # true | false
+
 data:
-  source: hf_dataset         # hf_dataset | local_text
-  # --- if source=hf_dataset:
-  dataset_name: wikitext
+  source: hf_dataset  # hf_dataset | local_text
+  
+  # For hf_dataset source:
+  dataset_name: Salesforce/wikitext
   dataset_config: wikitext-2-raw-v1
   text_column: text
-  # --- if source=local_text:
+  
+  # For local_text source:
   local_files:
-    train: data/raw/wiki.train.tokens
-    validation: data/raw/wiki.valid.tokens
-    test: data/raw/wiki.test.tokens
-  # common:
+    train: null  # data/raw/wiki.train.tokens
+    validation: null  # data/raw/wiki.valid.tokens
+    test: null  # data/raw/wiki.test.tokens
+  
+  # Common settings:
   block_size: 512
-  streaming: false           # for huge datasets set true
-  max_train_samples: null    # e.g. 20000 for quick demo
+  streaming: false
+  max_train_samples: null
   max_eval_samples: null
 
+# Model and tokenizer settings
+# When use_pretrained=true: uses pretrained_name for both
+# When use_pretrained=false: uses tokenizer_dir and builds model from scratch
+pretrained_name: gpt2  # e.g. gpt2, gpt2-medium, gpt2-large
+
 tokenizer:
-  # use pretrained OR your trained tokenizer folder
-  # pretrained_name: gpt2
-  tokenizer_dir: artifacts/tokenizer_bpe
+  tokenizer_dir: artifacts/tokenizer_bpe  # Used when use_pretrained=false
   pad_to_eos_if_missing: true
 
 model:
-  kind: gpt2_from_scratch    # gpt2_from_scratch | pretrained
-  # if pretrained:
-  # pretrained_name: gpt2
+  # Architecture settings (used when use_pretrained=false)
   n_layer: 8
   n_head: 8
   n_embd: 512
@@ -51,15 +59,13 @@ train:
   fp16: true
   bf16: false
 
-  # resume:
-  resume_from_checkpoint: auto   # auto | null | "path/to/checkpoint"
+  resume_from_checkpoint: auto  # auto | null | "path/to/checkpoint"
 
-  # reporting:
-  report_to: none                # none | wandb
+  report_to: none  # none | wandb
   run_name: "pretrain-gpt2-small"
 
 hub:
   push_to_hub: false
-  repo_id: null                  # "your-username/torch-linguist-pretrain"
+  repo_id: null  # "your-username/torch-linguist-pretrain"
   private: true
-  hub_strategy: "every_save"     # every_save | end
+  hub_strategy: "every_save"  # every_save | end
