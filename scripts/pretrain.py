@@ -29,11 +29,16 @@ def maybe_enable_wandb(train_cfg: dict):
         if train_cfg.get("run_name"):
             os.environ.setdefault("WANDB_RUN_NAME", str(train_cfg["run_name"]))
 
-def load_tokenizer(tok_cfg: dict):
-    if tok_cfg.get("tokenizer_dir"):
-        tok = AutoTokenizer.from_pretrained(tok_cfg["tokenizer_dir"])
+def load_tokenizer(tok_cfg: dict, use_pretrained: bool, pretrained_name: str | None):
+    if use_pretrained:
+        if not pretrained_name:
+            raise ValueError("pretrained_name must be set when use_pretrained=true")
+        tok = AutoTokenizer.from_pretrained(pretrained_name)
     else:
-        tok = AutoTokenizer.from_pretrained(tok_cfg["pretrained_name"])
+        tokenizer_dir = tok_cfg.get("tokenizer_dir")
+        if not tokenizer_dir:
+            raise ValueError("tokenizer.tokenizer_dir must be set when use_pretrained=false")
+        tok = AutoTokenizer.from_pretrained(tokenizer_dir)
 
     if tok_cfg.get("pad_to_eos_if_missing", True) and tok.pad_token is None:
         tok.pad_token = tok.eos_token
@@ -52,16 +57,27 @@ def main(cfg_path: str):
     cfg = load_cfg(cfg_path)
     set_seed(int(cfg.get("seed", 42)))
 
+    # Get the single flag that controls both model and tokenizer
+    use_pretrained = bool(cfg.get("use_pretrained", False))
+    pretrained_name = cfg.get("pretrained_name", None)
+
     data_cfg = cfg["data"]
-    tok_cfg = cfg["tokenizer"]
-    model_cfg = cfg["model"]
+    tok_cfg = cfg.get("tokenizer", {})
+    model_cfg = cfg.get("model", {})
     train_cfg = cfg["train"]
     hub_cfg = cfg.get("hub", {})
 
     maybe_enable_wandb(train_cfg)
     ensure_hf_login_hint(bool(hub_cfg.get("push_to_hub", False)))
 
-    tokenizer = load_tokenizer(tok_cfg)
+    # Configure model based on use_pretrained flag
+    if use_pretrained:
+        model_cfg["kind"] = "pretrained"
+        model_cfg["pretrained_name"] = pretrained_name
+    else:
+        model_cfg["kind"] = "gpt2_from_scratch"
+
+    tokenizer = load_tokenizer(tok_cfg, use_pretrained, pretrained_name)
 
     # 1) Load dataset
     streaming = bool(data_cfg.get("streaming", False))
