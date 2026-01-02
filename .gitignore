@@ -3,3 +3,4 @@
 .vscode
 runs/
 __pycache__/
+tokenizers/
