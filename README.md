@@ -156,7 +156,7 @@ PYTHONPATH=src python scripts/train_tokenizer.py --config configs/tokenizer_bpe.
 
 ```yaml
 tokenizer:
-  tokenizer_dir: artifacts/tokenizer_bpe
+  tokenizer_dir: tokenizers/tokenizer_bpe
   pad_to_eos_if_missing: true
 ```
 
