@@ -2,7 +2,7 @@ seed: 42
 
 # Single flag to control both model and tokenizer
 # Set to true to use pretrained model/tokenizer, false to use local/custom ones
-use_pretrained: true  # true | false
+use_pretrained: false  # true | false
 
 data:
   source: hf_dataset  # hf_dataset | local_text
@@ -27,10 +27,10 @@ data:
 # Model and tokenizer settings
 # When use_pretrained=true: uses pretrained_name for both
 # When use_pretrained=false: uses tokenizer_dir and builds model from scratch
-pretrained_name: gpt2  # e.g. gpt2, gpt2-medium, gpt2-large
+pretrained_name: openai-community/gpt2  # e.g. gpt2, gpt2-medium, gpt2-large
 
 tokenizer:
-  tokenizer_dir: artifacts/tokenizer_bpe  # Used when use_pretrained=false
+  tokenizer_dir: tokenizers/tokenizer_bpe  # Used when use_pretrained=false
   pad_to_eos_if_missing: true
 
 model:
