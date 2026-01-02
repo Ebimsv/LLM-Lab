@@ -1,12 +1,20 @@
 tokenizer:
-  out_dir: artifacts/tokenizer_bpe
+  out_dir: tokenizers/tokenizer_bpe
   vocab_size: 32000
   min_frequency: 2
   special_tokens: ["<unk>", "<pad>", "<bos>", "<eos>"]
   add_prefix_space: true
 
 data:
-  # local text files used to train tokenizer
+  source: hf_dataset  # hf_dataset | local_files
+  
+  # For hf_dataset source:
+  dataset_name: Salesforce/wikitext
+  dataset_config: wikitext-2-v1
+  text_column: text
+  splits: ["train", "validation", "test"]  # which splits to use for training tokenizer
+  
+  # For local_files source:
   files:
     - data/raw/wiki.train.tokens
     - data/raw/wiki.valid.tokens
