@@ -9,7 +9,7 @@ data:
   
   # For hf_dataset source:
   dataset_name: Salesforce/wikitext
-  dataset_config: wikitext-2-raw-v1
+  dataset_config: wikitext-2-v1
   text_column: text
   
   # For local_text source:
