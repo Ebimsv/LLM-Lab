@@ -41,8 +41,8 @@ model:
   dropout: 0.0
 
 train:
-  output_dir: runs/pretrain_gpt2_small
-  num_train_epochs: 1
+  output_dir: ckpts/pretrain_gpt2_small
+  num_train_epochs: 5
   learning_rate: 3.0e-4
   warmup_steps: 200
   weight_decay: 0.1
