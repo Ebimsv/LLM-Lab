@@ -115,7 +115,7 @@ PYTHONPATH=src python scripts/pretrain.py --config configs/pretrain_gpt2_small.y
 Checkpoints will be written to:
 
 ```
-runs/pretrain_gpt2_small/
+ckpts/pretrain_gpt2_small/
 ```
 
 ---
@@ -124,7 +124,7 @@ runs/pretrain_gpt2_small/
 
 ```bash
 PYTHONPATH=src python scripts/generate.py \
-  --model_dir runs/pretrain_gpt2_small/checkpoint-500 \
+  --model_dir ckpts/pretrain_gpt2_small/checkpoint-500 \
   --prompt "Hello my name is"
 ```
 
@@ -215,7 +215,7 @@ train:
 * You can also set an explicit checkpoint path:
 
   ```yaml
-  resume_from_checkpoint: runs/pretrain_gpt2_small/checkpoint-1000
+  resume_from_checkpoint: ckpts/pretrain_gpt2_small/checkpoint-1000
   ```
 
 ---
@@ -256,7 +256,7 @@ hub:
   private: true
 ```
 
-During training, checkpoints can be uploaded depending on `hub_strategy`, and at the end the script runs `trainer.push_to_hub()`.
+During training, checkpoints can be uploaded depending on `hub_strategy`, and at the end the script ckpts `trainer.push_to_hub()`.
 
 ---
 
