@@ -1,6 +1,6 @@
 .ipynb_checkpoints
 .idea/
 .vscode
-runs/
+ckpts/
 __pycache__/
 tokenizers/

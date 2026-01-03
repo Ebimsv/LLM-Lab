@@ -27,7 +27,7 @@ def build_trainer(model, tokenizer, train_ds, eval_ds, train_cfg: dict, hub_cfg:
         gradient_accumulation_steps=int(train_cfg["gradient_accumulation_steps"]),
 
         logging_steps=int(train_cfg["logging_steps"]),
-        evaluation_strategy="steps" if eval_ds is not None else "no",
+        eval_strategy="steps" if eval_ds is not None else "no",
         eval_steps=int(train_cfg["eval_steps"]),
         save_steps=int(train_cfg["save_steps"]),
         save_total_limit=int(train_cfg["save_total_limit"]),
